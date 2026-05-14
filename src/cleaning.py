@@ -4,17 +4,23 @@ import numpy as np
 import seaborn as sns
 
 df = pd.read_csv('data/raw/bank_data.csv')
+print(df.head())
+print(df.info())
 
-def prinnt(df):
-    print(df.head())
-    print(df.info())
-    print(df.isnull().sum())
-    print(df.nunique())
-    print(df.columns)
-    print(df.dtypes)
-    print(df.shape)
-    print(df.describe())
-    return
+df["default"] = df["default"].astype('bool')
+df["housing"] = df["housing"].astype('bool')
+df["loan"] = df["loan"].astype('bool')
+df["deposit"] = df["deposit"].astype('bool')
+df["marital"] = df["marital"].astype('category')
+df["education"] = df["education"].astype('category')
+df["job"] = df["job"].astype('category')
+df["contact"] = df["contact"].astype('category')
+df["month"] = pd.Categorical(df["month"], categories=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',   'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],ordered=True)
+df["day"] = pd.Categorical(df["day"], categories=list(range(1, 32)),ordered=True)
+df["poutcome"] = df["poutcome"].astype('category')
 
-prinnt(df)  
-    
+print(df.isnull().sum())
+df = df.drop_duplicates()
+
+df.to_csv('data/processed/bank_data_cleaned.csv', index=False)
+
