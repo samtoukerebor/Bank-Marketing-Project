@@ -16,17 +16,8 @@ env/
 .DS_Store
 Thumbs.db
 
-# Fichiers de données et sorties générées
-Data/Raw/*.csv
-Data/Processed/*.csv
-Images/*.png
-Images/*.jpg
-Images/*.jpeg
-Exports/*
-!Exports/.gitkeep
+# Secrets
+.env
 
 # Logs
 *.log
-
-# Secrets
-.env
