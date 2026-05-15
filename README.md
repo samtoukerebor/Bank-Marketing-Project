@@ -34,3 +34,10 @@ bank-marketing-project/
 ├── .gitignore
 ├── README.md
 └── requirements.txt
+
+## Fichiers principaux
+
+- `Src/cleaning.py` : nettoyage des données.
+- `Src/preprocessing.py` : préparation des données pour l’analyse ou la modélisation.
+- `Src/visualisation.py` : génération des graphiques et analyses visuelles.
+- `Notebooks/exploration.ipynb` : exploration des données et interprétations.
