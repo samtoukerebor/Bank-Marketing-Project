@@ -1,10 +1,3 @@
----
-
-# 2) `requirements.txt`
-
-Voici la version simple et suffisante pour ton projet :
-
-```txt
 pandas
 numpy
 matplotlib
