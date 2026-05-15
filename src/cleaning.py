@@ -2,9 +2,6 @@ from pathlib import Path
 import pandas as pd
 
 
-# ===============================
-# CHEMINS DU PROJET
-# ===============================
 BASE_DIR = Path(__file__).resolve().parents[1]
 RAW_DIR = BASE_DIR / "Data" / "Raw"
 PROCESSED_DIR = BASE_DIR / "Data" / "Processed"
@@ -13,16 +10,13 @@ INPUT_FILE = RAW_DIR / "bank_data.csv"
 OUTPUT_FILE = PROCESSED_DIR / "bank_data_cleaned.csv"
 
 
-# ===============================
-# FONCTIONS
-# ===============================
 def load_data(filepath: Path) -> pd.DataFrame:
-    """Charge le fichier CSV."""
+    """Charge les données depuis un fichier CSV."""
     return pd.read_csv(filepath)
 
 
 def standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """Uniformise les noms de colonnes."""
+    """Met les noms de colonnes en minuscules et remplace les espaces."""
     df = df.copy()
     df.columns = (
         df.columns.str.strip()
@@ -32,27 +26,17 @@ def standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def clean_text_values(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
-    """Nettoie les valeurs textuelles."""
+def clean_text_columns(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+    """Nettoie les colonnes textuelles."""
     df = df.copy()
     for col in columns:
         if col in df.columns:
-            df[col] = df[col].astype(str).str.strip().str.lower()
-    return df
-
-
-def convert_binary_to_numeric(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
-    """Convertit yes/no en 1/0."""
-    df = df.copy()
-    mapping = {"yes": 1, "no": 0}
-    for col in columns:
-        if col in df.columns:
-            df[col] = df[col].map(mapping)
+            df[col] = df[col].astype("string").str.strip().str.lower()
     return df
 
 
 def replace_unknown_with_nan(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
-    """Remplace 'unknown' par NaN."""
+    """Remplace unknown par NaN dans certaines colonnes."""
     df = df.copy()
     for col in columns:
         if col in df.columns:
@@ -60,20 +44,30 @@ def replace_unknown_with_nan(df: pd.DataFrame, columns: list[str]) -> pd.DataFra
     return df
 
 
+def convert_binary_columns(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+    """Convertit yes/no en 1/0."""
+    df = df.copy()
+    mapping = {"yes": 1, "no": 0}
+    for col in columns:
+        if col in df.columns:
+            df[col] = df[col].map(mapping).astype("Int64")
+    return df
+
+
 def remove_duplicates(df: pd.DataFrame) -> pd.DataFrame:
-    """Supprime les doublons."""
+    """Supprime les lignes dupliquées."""
     return df.drop_duplicates().copy()
 
 
 def quality_report(df: pd.DataFrame) -> None:
-    """Affiche un petit rapport qualité."""
+    """Affiche un rapport qualité rapide."""
     print("\n===== INFO =====")
     print(df.info())
 
     print("\n===== VALEURS MANQUANTES =====")
     print(df.isna().sum().sort_values(ascending=False))
 
-    print("\n===== DOUBLONS =====")
+    print("\n===== NOMBRE DE DOUBLONS =====")
     print(df.duplicated().sum())
 
     print("\n===== APERÇU =====")
@@ -81,14 +75,11 @@ def quality_report(df: pd.DataFrame) -> None:
 
 
 def save_data(df: pd.DataFrame, filepath: Path) -> None:
-    """Sauvegarde le DataFrame en CSV."""
+    """Sauvegarde les données nettoyées."""
     filepath.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(filepath, index=False)
 
 
-# ===============================
-# PIPELINE PRINCIPAL
-# ===============================
 def main():
     df = load_data(INPUT_FILE)
     df = standardize_columns(df)
@@ -96,15 +87,15 @@ def main():
     text_cols = ["job", "marital", "education", "contact", "month", "poutcome"]
     binary_cols = ["default", "housing", "loan", "deposit"]
 
-    df = clean_text_values(df, text_cols + binary_cols)
+    df = clean_text_columns(df, text_cols + binary_cols)
     df = replace_unknown_with_nan(df, ["job", "education", "contact", "poutcome"])
-    df = convert_binary_to_numeric(df, binary_cols)
+    df = convert_binary_columns(df, binary_cols)
     df = remove_duplicates(df)
 
     quality_report(df)
     save_data(df, OUTPUT_FILE)
 
-    print(f"\nFichier nettoyé enregistré dans : {OUTPUT_FILE}")
+    print(f"\nFichier nettoyé enregistré ici : {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":
