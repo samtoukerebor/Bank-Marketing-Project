@@ -35,50 +35,9 @@ bank-marketing-project/
 ├── README.md
 └── requirements.txt
 
-## Fichiers principaux
+## Installation
+Créer un environnement virtuel puis installer les dépendances :
 
-Fichiers principaux
-Src/cleaning.py
-Script de nettoyage des données :
-
-standardisation des noms de colonnes ;
-nettoyage des valeurs textuelles ;
-conversion des variables binaires ;
-remplacement de certaines valeurs par des valeurs manquantes ;
-suppression des doublons ;
-export du fichier nettoyé.
-Src/preprocessing.py
-Script de prétraitement :
-
-séparation des variables explicatives et de la cible ;
-imputation des valeurs manquantes ;
-encodage des variables catégorielles ;
-standardisation des variables numériques ;
-préparation des données pour la modélisation.
-Src/visualisation.py
-Script de visualisation :
-
-distributions des variables numériques ;
-comparaison des variables avec la cible ;
-corrélations ;
-sauvegarde automatique des figures.
-Notebooks/exploration.ipynb
-Notebook d’analyse exploratoire :
-
-aperçu du jeu de données ;
-statistiques descriptives ;
-analyses visuelles ;
-premières interprétations.
-Jeu de données
-Le jeu de données contient notamment les variables suivantes :
-
-age, job, marital, education, default, balance, housing, loan, contact
-day, month, duration, campaign, pdays, previous, poutcome, deposit
-
-La variable cible est deposit, qui indique si le client a souscrit au dépôt à terme (yes) ou non (no).
-
-# Installation
-        Créer un environnement virtuel puis installer les dépendances :
 pip install -r requirements.txt
 
 # Utilisation
